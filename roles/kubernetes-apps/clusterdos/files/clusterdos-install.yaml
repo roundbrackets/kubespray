@@ -32,7 +32,7 @@ spec:
     helm:
       valuesObject:
         clusterdos:
-          clustername: linode
+          clustername: aranya-takehome   # REQUIRED — set to a real name
           ref: v0.3.26
         gitapps:
           certmanager:
@@ -70,16 +70,16 @@ spec:
           kubevirt:
             enabled: false
           redis:
-            enabled: false 
+            enabled: true
             namespace: redis
             repoURL: https://github.com/roundbrackets/aranya-takehome.git
             path: charts/redis
             targetRevision: main
             automated: true
-          hello-aranya:
+          redis:
             enabled: true
             namespace: aranya
-            repoURL: https://github.com/roundbrackets/aranya-takehome.git
-            path: charts/hello-aranya
+            repoURL: https://github.com/roundbrackets/hello-aranya-deploy.git
+            path: .
             targetRevision: main
             automated: true
