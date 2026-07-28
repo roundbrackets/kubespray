@@ -24,7 +24,7 @@ spec:
       - CreateNamespace=true
       - PruneLast=true
       - ApplyOutOfSyncOnly=true
-      - ServerSideApply=true
+      - ServerSideApply=false
   source:
     repoURL: 'https://gitlab.com/aranya-tech/public/clusterdOS.git'
     path: metadeployment/
@@ -32,7 +32,7 @@ spec:
     helm:
       valuesObject:
         clusterdos:
-          clustername: aranya-takehome   # REQUIRED — set to a real name
+          clustername: linode.local
           ref: v0.3.26
         gitapps:
           certmanager:
@@ -41,14 +41,18 @@ spec:
               featureGates: "ExperimentalGatewayAPISupport=false"
               config:
                 enableGatewayAPI: false
+            serverSideApply: false
           metricsserver:
             enabled: true
             values:
               args: [--kubelet-insecure-tls]
+            serverSideApply: false
           nfd:
             enabled: true
+            serverSideApply: false
           ksm:
             enabled: true
+            serverSideApply: false
           crossplane:
             enabled: false
           lgtm:
@@ -72,14 +76,16 @@ spec:
           redis:
             enabled: true
             namespace: clusterdos-redis
-            repoURL: https://github.com/roundbrackets/aranya-takehome.git
+            repoURL: https://github.com/roundbrackets/redis-deploy.git
             path: ./
             targetRevision: main
             automated: true
+            serverSideApply: false
           hello-aranya:
             enabled: true
-            namespace: clusterdos-aranya
+            namespace: clusterdos-hello-aranya
             repoURL: https://github.com/roundbrackets/hello-aranya-deploy.git
             path: ./
             targetRevision: main
             automated: true
+            serverSideApply: false

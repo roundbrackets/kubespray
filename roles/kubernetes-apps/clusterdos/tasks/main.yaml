@@ -19,3 +19,46 @@
     kubectl: "{{ bin_dir }}/kubectl"
     filename: "{{ kube_config_dir }}/{{ clusterdos_manifest }}"
     state: latest
+
+- name: ClusterdOS | Sync parent Application
+  become: true
+  command: >-
+    {{ bin_dir }}/kubectl
+    --kubeconfig {{ kube_config_dir }}/admin.conf
+    -n argocd
+    patch application clusterdos
+    --type merge
+    -p '{"operation":{"sync":{"prune":true}}}'
+  changed_when: true    
+
+- name: ClusterdOS | Wait for parent Application to sync
+  become: true
+  command: >-
+    {{ bin_dir }}/kubectl
+    --kubeconfig {{ kube_config_dir }}/admin.conf
+    -n argocd
+    wait
+    --for=jsonpath='{.status.sync.status}'=Synced
+    --timeout=180s
+    application/clusterdos
+  changed_when: false  
+
+- name: ClusterdOS | Hard refresh child Applications
+  become: true
+  shell: |
+    set -o pipefail
+    {{ bin_dir }}/kubectl \
+      --kubeconfig {{ kube_config_dir }}/admin.conf \
+      -n argocd get applications \
+      -o name |
+    grep '^application.argoproj.io/clusterdos-' |
+    while read -r app; do
+      {{ bin_dir }}/kubectl \
+        --kubeconfig {{ kube_config_dir }}/admin.conf \
+        -n argocd annotate "$app" \
+        argocd.argoproj.io/refresh=hard \
+        --overwrite
+    done
+  args:
+    executable: /bin/bash
+  changed_when: true  

@@ -1,6 +1,8 @@
 # Kubespray inventory — linode nodes (DigitalOcean, sfo2).
 # ansible_host = public IP (SSH in); ip/access_ip = private IP (cluster traffic).
 all:
+  vars:
+    ansible_user: root
   hosts:
     linode1:
       ansible_host: 173.255.241.165

@@ -1,5 +1,5 @@
 ---
 argocd_enabled: false
-argocd_version: v3.4.5 
+argocd_version: 3.4.5 
 argocd_namespace: argocd
 # argocd_admin_password:
