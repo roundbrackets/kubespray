@@ -76,7 +76,7 @@ spec:
             path: ./
             targetRevision: main
             automated: true
-          redis:
+          hello-aranya:
             enabled: true
             namespace: clusterdos-aranya
             repoURL: https://github.com/roundbrackets/hello-aranya-deploy.git
